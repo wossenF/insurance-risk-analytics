@@ -36,9 +36,37 @@ pytest -q
 Notes on data loading
 - The `load_data` function in `src/data_loader.py` reads the pipe-separated file. Pandas may emit a `DtypeWarning` for mixed-type columns (e.g., columns 32 and 37); you can set `low_memory=False` or provide explicit `dtype` mappings to avoid the warning.
 
+Data versioning with DVC
+- This repository uses DVC for versioning and pushing large data files to a remote storage. If you cloned the repo and need the data, install DVC and pull the data with:
+
+```
+pip install dvc
+dvc pull
+```
+
+- To push data (if you have write access to the configured DVC remote):
+
+```
+dvc push
+```
+
+Ensure your DVC remote is configured (see `.dvc/config` or run `dvc remote list`). The project may require authentication to access the remote storage.
+
 ## Development notes
 - Notebook imports: notebooks add the repo root to `sys.path` with `sys.path.insert(0, str(Path.cwd().parent))` to allow `from src...` imports.
 - Converting numeric columns: some numeric-looking columns may be strings; the notebook coerces these with `pd.to_numeric(..., errors='coerce')` before plotting.
+
+## Git workflow
+- Work in feature branches. Example to create and push a branch for a change:
+
+```
+git checkout -b task-1
+git add -A
+git commit -m "chore(task-1): add README and fix notebook import and histogram"
+git push --set-upstream origin task-1
+```
+
+This project pushed recent changes in branch `task-1` including the README updates and notebook fixes.
 
 ## Contributing
 - Open an issue or create a pull request. Follow the existing project style and add tests for new helpers.
