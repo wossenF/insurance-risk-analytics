@@ -6,10 +6,12 @@ A small project for exploratory data analysis and risk analytics on an insurance
 - `data/` — raw and processed data. The raw dataset used here is `data/raw/MachineLearningRating_v3.txt`.
 - `notebooks/01_eda.ipynb` — example exploratory analysis and visualizations.
 - `notebooks/02_hypothesis_testing.ipynb` — hypothesis testing workflow for province, zipcode, and gender comparisons.
+- `notebooks/03_modeling.ipynb` — modeling workflow for claim risk/severity experiments and premium estimation features.
 - `src/` — project source code:
 	- `src/data_loader.py` — helper to load the raw dataset.
 	- `src/eda_utils.py` — EDA utility functions (missing-value summaries, derived metrics).
 	- `src/hypothesis_tests.py` — statistical test helpers for t-tests, chi-square tests, and z-tests.
+	- `src/modeling.py` — factory helpers that return regression and classification model dictionaries.
 	- `src/visualization.py` — plotting helpers.
 - `tests/` — unit tests (run with `pytest`).
 
@@ -30,7 +32,11 @@ pip install -r requirements.txt
 
 - Open `notebooks/02_hypothesis_testing.ipynb` to reproduce the statistical tests used in the project. It loads the raw dataset through `src.data_loader.load_data`, computes derived columns such as `HasClaim` and `Margin`, and summarizes the results of chi-square and t-tests in a final table.
 
-4. Run tests:
+4. Run the modeling notebook:
+
+- Open `notebooks/03_modeling.ipynb` to run baseline regression and classification experiments. The notebook uses numeric features, imputes missing values before model fitting, and reports RMSE/R2 for regression plus Accuracy/Precision/Recall/F1 for classification.
+
+5. Run tests:
 
 ```
 pytest -q
@@ -62,6 +68,7 @@ Ensure your DVC remote is configured (see `.dvc/config` or run `dvc remote list`
 - Notebook imports: notebooks add the repo root to `sys.path` with `sys.path.insert(0, str(Path.cwd().parent))` to allow `from src...` imports.
 - Converting numeric columns: some numeric-looking columns may be strings; the notebook coerces these with `pd.to_numeric(..., errors='coerce')` before plotting.
 - Hypothesis testing helpers: `src/hypothesis_tests.py` wraps `scipy.stats` functions so the notebook can reuse `t_test`, `chi_square_test`, and `z_test` consistently.
+- Modeling helpers: `src/modeling.py` provides `get_regression_models()` and `get_classification_models()` used by `notebooks/03_modeling.ipynb`.
 
 ## Git workflow
 - Work in feature branches. Example to create and push a branch for a change:
